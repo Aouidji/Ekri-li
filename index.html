@@ -3,129 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أكريلي 2026</title>
+    <title>أكريلي DZ | المنصة رقم 1 🚀</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background: #f8fafc; }
-        .premium-card { background: white; border-radius: 20px; border: 1px solid #e2e8f0; position: relative; }
-        .delete-btn { display: none; }
-        .is-admin .delete-btn { display: flex; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: #0f172a; /* خلفية داكنة فخمة */
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* خلفية متفاعلة */
+        .bg-mesh {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        .search-main {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 50px rgba(124, 58, 237, 0.3);
+            border-radius: 20px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-main:focus-within { transform: scale(1.02); }
+
+        .btn-premium {
+            background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.6); }
+
+        .ad-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 28px;
+            transition: 0.4s;
+        }
+
+        .ad-card:hover {
+            border-color: #7c3aed;
+            transform: translateY(-8px);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .no-select { -webkit-user-select: none; user-select: none; }
+        
+        @keyframes shine { from { left: -100%; } to { left: 100%; } }
+        .shine-effect::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-25deg); animation: shine 3s infinite;
+        }
     </style>
 </head>
-<body>
+<body class="pb-10">
+    <div class="bg-mesh"></div>
 
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 py-4 px-6 border-b">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg">
-                    <i class="fas fa-umbrella-beach"></i>
-                </div>
-                <span class="text-2xl font-black text-blue-900">أكريلي</span>
-            </div>
-            <div class="flex gap-2">
-                <button id="logoutBtn" onclick="adminLogout()" class="hidden bg-red-100 text-red-600 px-4 py-2 rounded-xl font-bold text-xs">خروج</button>
-                <button onclick="document.getElementById('adModal').classList.remove('hidden')" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-md">+ نشر</button>
-            </div>
+    <nav class="container mx-auto p-6 flex justify-between items-center">
+        <div id="adminLogo" class="no-select cursor-pointer group">
+            <h1 class="text-3xl font-black tracking-tighter transition group-hover:text-purple-400">
+                أكريلي<span class="text-purple-600">DZ</span>
+            </h1>
+        </div>
+        <div class="flex items-center gap-5">
+            <button onclick="openAuth()" id="userTag" class="text-sm font-bold opacity-70 hover:opacity-100 transition">دخول</button>
+            <button onclick="checkAdd()" class="btn-premium px-6 py-2.5 rounded-xl font-black text-xs">نشر إعلان </button>
         </div>
     </nav>
 
-    <header class="container mx-auto px-6 py-10 text-center">
-        <div class="max-w-xl mx-auto bg-white p-2 rounded-2xl shadow-lg border flex gap-2">
-            <input type="text" id="searchText" onkeyup="filterAds()" placeholder="اكتب اسم الولاية أو المنطقة  ..." class="flex-1 p-3 outline-none font-bold text-sm">
-            <div class="p-3 text-slate-400"><i class="fas fa-search"></i></div>
+    <header class="container mx-auto px-6 pt-16 pb-20 text-center">
+        <h2 class="text-5xl md:text-7xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-400 leading-tight">
+            بيت عطلتك القادم<br>بضغطة واحدة.
+        </h2>
+        <p class="text-slate-400 font-medium mb-12 max-w-xl mx-auto">
+            المنصة الأسرع والأكثر أماناً في الجزائر لكراء العقارات السياحية.
+        </p>
+
+        <div class="search-main max-w-3xl mx-auto flex flex-col md:flex-row p-2 gap-2">
+            <div class="flex-1 flex items-center px-4">
+                <i class="fas fa-map-marked-alt text-purple-600 ml-3"></i>
+                <input type="text" id="searchInput" onkeyup="searchAds()" placeholder="ابحث عن: بجاية، جيجل، شقة، فيلا..." class="w-full py-4 bg-transparent outline-none text-slate-800 font-bold">
+            </div>
+            <button class="bg-slate-900 text-white px-10 py-4 rounded-xl font-black hover:bg-purple-700 transition">استكشف</button>
         </div>
     </header>
 
-    <main class="container mx-auto px-6 pb-20">
-        <div id="adsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <main class="container mx-auto px-6">
+        <div class="flex justify-between items-end mb-10">
+            <div>
+                <h3 class="text-2xl font-black">العروض الحالية</h3>
+                <p class="text-xs text-purple-400 font-bold">تحديث فوري للقائمة</p>
+            </div>
+            <div id="count" class="glass px-4 py-2 text-xs font-bold tracking-widest uppercase">0 عروض</div>
+        </div>
+
+        <div id="adsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             </div>
     </main>
 
-    <div id="adModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-[100]">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl">
-            <h3 class="text-xl font-black mb-4">إضافة إعلان</h3>
-            <form id="adForm" class="space-y-3">
-                <input type="text" id="formWilaya" placeholder="الولاية" class="w-full bg-slate-50 p-4 rounded-xl font-bold border" required>
-                <input type="text" id="formMun" placeholder="البلدية" class="w-full bg-slate-50 p-4 rounded-xl font-bold border" required>
-                <input type="number" id="price" placeholder="السعر" class="w-full bg-slate-50 p-4 rounded-xl font-bold border" required>
-                <input type="tel" id="phone" placeholder="الهاتف" class="w-full bg-slate-50 p-4 rounded-xl font-bold border" required>
-                <textarea id="desc" placeholder="وصف قصير..." class="w-full bg-slate-50 p-4 rounded-xl font-bold border" rows="2" required></textarea>
-                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black">نشر الآن</button>
-                <button type="button" onclick="document.getElementById('adModal').classList.add('hidden')" class="w-full text-slate-400 font-bold mt-2">إغلاق</button>
+    <div id="modalOverlay" class="fixed inset-0 bg-black/90 hidden z-[100] backdrop-blur-xl flex items-center justify-center p-4">
+        <div id="authBox" class="hidden w-full max-w-sm glass p-8 animate-in fade-in zoom-in duration-300">
+            <h3 class="text-2xl font-black mb-6">مرحباً بك 👋</h3>
+            <div class="space-y-4">
+                <input type="email" id="email" placeholder="البريد الإلكتروني" class="w-full p-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-purple-500 font-bold">
+                <input type="password" id="pass" placeholder="كلمة المرور" class="w-full p-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-purple-500 font-bold">
+                <button onclick="handleAuth('login')" class="w-full btn-premium py-4 rounded-xl font-black">دخول</button>
+                <button onclick="handleAuth('signup')" class="w-full text-xs text-slate-400 font-bold">إنشاء حساب جديد</button>
+                <button onclick="closeModals()" class="w-full text-[10px] opacity-30 mt-4">إلغاء</button>
+            </div>
+        </div>
+
+        <div id="addBox" class="hidden w-full max-w-lg glass p-8 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-2xl font-black mb-6 text-purple-400 italic">تفاصيل العقار </h3>
+            <form id="adForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="w" placeholder="الولاية" class="p-4 bg-white/5 border border-white/10 rounded-xl outline-none font-bold" required>
+                    <input type="text" id="m" placeholder="البلدية" class="p-4 bg-white/5 border border-white/10 rounded-xl outline-none font-bold" required>
+                </div>
+                <input type="number" id="p" placeholder="السعر لكل ليلة (دج)" class="w-full p-4 bg-white/5 border border-white/10 rounded-xl outline-none font-bold text-yellow-400" required>
+                <input type="tel" id="ph" placeholder="رقم الهاتف" class="w-full p-4 bg-white/5 border border-white/10 rounded-xl outline-none font-bold" required>
+                <textarea id="d" placeholder="وصف العقار وميزاته..." class="w-full p-4 bg-white/5 border border-white/10 rounded-xl outline-none font-bold h-32" required></textarea>
+                <button type="submit" class="w-full btn-premium py-4 rounded-xl font-black text-lg">نشر العرض </button>
+                <button type="button" onclick="closeModals()" class="w-full text-slate-500 font-bold mt-2">تراجع</button>
             </form>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
     <script>
         const firebaseConfig = {
-            databaseURL: "https://ekri-li-default-rtdb.firebaseio.com"
+            apiKey: "AIzaSyAyGLsVF8sObw41F0nKlALbD8S1K1ttPC0",
+            databaseURL: "https://ekri-li-default-rtdb.firebaseio.com",
+            projectId: "ekri-li"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        let isAdmin = localStorage.getItem('ekri_admin') === 'true';
+        const auth = firebase.auth();
 
-        if(isAdmin) document.body.classList.add('is-admin'), document.getElementById('logoutBtn').classList.remove('hidden');
+        let isAdmin = localStorage.getItem('akrili_admin_v2') === 'true';
 
-        function adminLogout() {
-            localStorage.removeItem('ekri_admin');
-            location.reload();
+        // --- ميزة آدم السرية ---
+        let timer;
+        const logo = document.getElementById('adminLogo');
+        logo.addEventListener('mousedown', () => timer = setTimeout(openAdmin, 3000));
+        logo.addEventListener('touchstart', () => timer = setTimeout(openAdmin, 3000));
+        logo.addEventListener('mouseup', () => clearTimeout(timer));
+        logo.addEventListener('touchend', () => clearTimeout(timer));
+
+        function openAdmin() {
+            const pass = prompt("كود الإدارة السري:");
+            if(pass === "aouidjiademademaouidjinawal") {
+                localStorage.setItem('akrili_admin_v2', 'true');
+                alert("مرحباً يا زعيم! الصلاحيات مفعلة.");
+                location.reload();
+            }
         }
 
+        // --- إدارة المودالات ---
+        function openAuth() {
+            document.getElementById('modalOverlay').classList.remove('hidden');
+            document.getElementById('authBox').classList.remove('hidden');
+            document.getElementById('addBox').classList.add('hidden');
+        }
+        function checkAdd() {
+            if(auth.currentUser) {
+                document.getElementById('modalOverlay').classList.remove('hidden');
+                document.getElementById('addBox').classList.remove('hidden');
+                document.getElementById('authBox').classList.add('hidden');
+            } else openAuth();
+        }
+        function closeModals() { document.getElementById('modalOverlay').classList.add('hidden'); }
+
+        // --- نظام المستخدمين ---
+        async function handleAuth(t) {
+            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+            try {
+                t === 'login' ? await auth.signInWithEmailAndPassword(e, p) : await auth.createUserWithEmailAndPassword(e, p);
+                location.reload();
+            } catch (err) { alert(err.message); }
+        }
+        auth.onAuthStateChanged(user => { if(user) document.getElementById('userTag').innerText = "خروج"; });
+
+        // --- البيانات ---
         document.getElementById('adForm').addEventListener('submit', (e) => {
             e.preventDefault();
             db.ref('ads').push({
-                wilaya: document.getElementById('formWilaya').value,
-                municipality: document.getElementById('formMun').value,
-                price: document.getElementById('price').value,
-                phone: document.getElementById('phone').value,
-                desc: document.getElementById('desc').value
+                w: document.getElementById('w').value, m: document.getElementById('m').value,
+                p: document.getElementById('p').value, ph: document.getElementById('ph').value,
+                d: document.getElementById('d').value, uid: auth.currentUser.uid, time: Date.now()
             }).then(() => location.reload());
         });
 
-        function deleteAd(id) {
-            if(confirm("حذف؟")) db.ref('ads/' + id).remove().then(() => location.reload());
-        }
+        function deleteAd(id) { if(confirm("حذف؟")) db.ref('ads/'+id).remove(); }
 
-        function filterAds() {
-            const query = document.getElementById('searchText').value.trim();
-            if(query === "aouidjiademademaouidjinawal") {
-                if(prompt("كود الأدمن") === "1234") {
-                    localStorage.setItem('ekri_admin', 'true');
-                    location.reload();
-                }
-            }
+        function searchAds() { loadAds(document.getElementById('searchInput').value.toLowerCase()); }
 
+        function loadAds(q = '') {
             db.ref('ads').on('value', snap => {
-                const container = document.getElementById('adsContainer');
-                container.innerHTML = '';
+                const list = document.getElementById('adsList');
+                list.innerHTML = '';
+                let c = 0;
                 snap.forEach(child => {
-                    const ad = child.val();
-                    const id = child.key;
-                    if((ad.wilaya + ad.municipality).includes(query)) {
-                        container.innerHTML += `
-                        <div class="premium-card p-6 shadow-sm">
-                            <button onclick="deleteAd('${id}')" class="delete-btn absolute -top-2 -left-2 bg-red-500 text-white w-8 h-8 rounded-full items-center justify-center shadow-lg border-2 border-white">×</button>
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-xs font-bold">${ad.wilaya}</span>
-                                <span class="font-black text-blue-900">${ad.price} دج</span>
+                    const ad = child.val(), id = child.key;
+                    if(ad.w.includes(q) || ad.m.includes(q) || q === '') {
+                        c++;
+                        list.innerHTML += `
+                        <div class="ad-card p-6 flex flex-col relative overflow-hidden shine-effect">
+                            <div class="w-full h-44 bg-white/5 rounded-2xl mb-6 flex items-center justify-center">
+                                <i class="fas fa-home text-5xl text-white/10"></i>
                             </div>
-                            <h3 class="text-xl font-black mb-1">${ad.municipality}</h3>
-                            <p class="text-slate-500 text-xs mb-4 line-clamp-2">${ad.desc}</p>
-                            <div class="flex gap-2">
-                                <a href="tel:${ad.phone}" class="flex-1 bg-slate-900 text-white text-center py-3 rounded-xl font-bold text-sm italic">اتصل</a>
-                                <a href="https://wa.me/213${ad.phone.substring(1)}" class="w-12 bg-green-500 text-white flex items-center justify-center rounded-xl shadow-lg shadow-green-100"><i class="fab fa-whatsapp"></i></a>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">${ad.w}</span>
+                                <div class="text-2xl font-black text-yellow-400">${ad.p} <span class="text-xs">دج</span></div>
+                            </div>
+                            <h4 class="text-xl font-black mb-2">${ad.m}</h4>
+                            <p class="text-slate-400 text-xs mb-8 line-clamp-2 font-bold italic">"${ad.d}"</p>
+                            <div class="flex gap-3 mt-auto">
+                                <a href="tel:${ad.ph}" class="flex-1 bg-white text-slate-900 text-center py-3.5 rounded-xl font-black text-xs transition hover:bg-purple-500 hover:text-white">اتصال</a>
+                                <a href="https://wa.me/213${ad.ph}" class="w-12 h-12 glass flex items-center justify-center rounded-xl hover:text-green-400 transition"><i class="fab fa-whatsapp text-xl"></i></a>
+                                ${isAdmin ? `<button onclick="deleteAd('${id}')" class="w-12 h-12 bg-red-500/20 text-red-500 flex items-center justify-center rounded-xl"><i class="fas fa-trash"></i></button>` : ''}
                             </div>
                         </div>`;
                     }
                 });
+                document.getElementById('count').innerText = c + " عروض";
             });
         }
-        filterAds();
+        loadAds();
     </script>
 </body>
 </html>
