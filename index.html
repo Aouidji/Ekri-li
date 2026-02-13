@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أكريلي 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap');
+        body { font-family: 'Tajawal', sans-serif; background: #f8fafc; }
+        .premium-card { background: white; border-radius: 20px; border: 1px solid #e2e8f0; position: relative; }
+        .delete-btn { display: none; }
+        .is-admin .delete-btn { display: flex; }
+    </style>
+</head>
+<body>
+
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 py-4 px-6 border-b">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-umbrella-beach"></i>
+                </div>
+                <span class="text-2xl font-black text-blue-900">أكريلي</span>
+            </div>
+            <div class="flex gap-2">
+                <button id="logoutBtn" onclick="adminLogout()" class="hidden bg-red-100 text-red-600 px-4 py-2 rounded-xl font-bold text-xs">خروج</button>
+                <button onclick="document.getElementById('adModal').classList.remove('hidden')" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-md">+ نشر</button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="container mx-auto px-6 py-10 text-center">
+        <div class="max-w-xl mx-auto bg-white p-2 rounded-2xl shadow-lg border flex gap-2">
+            <input type="text" id="searchText" onkeyup="filterAds()" placeholder="اكتب اسم الولاية أو الكلمة السرية..." class="flex-1 p-3 outline-none font-bold text-sm">
+            <div class="p-3 text-slate-400"><i class="fas fa-search"></i></div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 pb-20">
+        <div id="adsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            </div>
+    </main>
+
+    <div id="adModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-[100]">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl">
+            <h3 class="text-xl font-black mb-4">إضافة إعلان</h3>
+            <form id="adForm" class="space-y-3">
+                <input type="text" id="formWilaya" placeholder="الولاية" class="w-full bg-slate-50 p-4 rounded-xl font-bold border" required>
+                <input type="text" id="formMun" placeholder="البلدية" class="w-full bg-slate-50 p-4 rounded-xl font-bold border" required>
+                <input type="number" id="price" placeholder="السعر" class="w-full bg-slate-50 p-4 rounded-xl font-bold border" required>
+                <input type="tel" id="phone" placeholder="الهاتف" class="w-full bg-slate-50 p-4 rounded-xl font-bold border" required>
+                <textarea id="desc" placeholder="وصف قصير..." class="w-full bg-slate-50 p-4 rounded-xl font-bold border" rows="2" required></textarea>
+                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black">نشر الآن</button>
+                <button type="button" onclick="document.getElementById('adModal').classList.add('hidden')" class="w-full text-slate-400 font-bold mt-2">إغلاق</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            databaseURL: "https://ekri-li-default-rtdb.firebaseio.com"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        let isAdmin = localStorage.getItem('ekri_admin') === 'true';
+
+        if(isAdmin) document.body.classList.add('is-admin'), document.getElementById('logoutBtn').classList.remove('hidden');
+
+        function adminLogout() {
+            localStorage.removeItem('ekri_admin');
+            location.reload();
+        }
+
+        document.getElementById('adForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            db.ref('ads').push({
+                wilaya: document.getElementById('formWilaya').value,
+                municipality: document.getElementById('formMun').value,
+                price: document.getElementById('price').value,
+                phone: document.getElementById('phone').value,
+                desc: document.getElementById('desc').value
+            }).then(() => location.reload());
+        });
+
+        function deleteAd(id) {
+            if(confirm("حذف؟")) db.ref('ads/' + id).remove().then(() => location.reload());
+        }
+
+        function filterAds() {
+            const query = document.getElementById('searchText').value.trim();
+            if(query === "aouidjiademademaouidjinawal") {
+                if(prompt("كود الأدمن") === "1234") {
+                    localStorage.setItem('ekri_admin', 'true');
+                    location.reload();
+                }
+            }
+
+            db.ref('ads').on('value', snap => {
+                const container = document.getElementById('adsContainer');
+                container.innerHTML = '';
+                snap.forEach(child => {
+                    const ad = child.val();
+                    const id = child.key;
+                    if((ad.wilaya + ad.municipality).includes(query)) {
+                        container.innerHTML += `
+                        <div class="premium-card p-6 shadow-sm">
+                            <button onclick="deleteAd('${id}')" class="delete-btn absolute -top-2 -left-2 bg-red-500 text-white w-8 h-8 rounded-full items-center justify-center shadow-lg border-2 border-white">×</button>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-xs font-bold">${ad.wilaya}</span>
+                                <span class="font-black text-blue-900">${ad.price} دج</span>
+                            </div>
+                            <h3 class="text-xl font-black mb-1">${ad.municipality}</h3>
+                            <p class="text-slate-500 text-xs mb-4 line-clamp-2">${ad.desc}</p>
+                            <div class="flex gap-2">
+                                <a href="tel:${ad.phone}" class="flex-1 bg-slate-900 text-white text-center py-3 rounded-xl font-bold text-sm italic">اتصل</a>
+                                <a href="https://wa.me/213${ad.phone.substring(1)}" class="w-12 bg-green-500 text-white flex items-center justify-center rounded-xl shadow-lg shadow-green-100"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>`;
+                    }
+                });
+            });
+        }
+        filterAds();
+    </script>
+</body>
+</html>
