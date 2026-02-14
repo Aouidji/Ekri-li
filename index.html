@@ -8,17 +8,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-        :root { --ocean: #001219; --cyan-bright: #0a9396; }
-        body { font-family: 'Cairo', sans-serif; background: radial-gradient(circle at top, #002129 0%, #001219 100%); color: #e9ecef; min-height: 100vh; }
+        :root { --ocean: #001219; --cyan-bright: #0a9396; --gold: #ee9b00; }
+        body { font-family: 'Cairo', sans-serif; background: radial-gradient(circle at top, #002129 0%, #001219 100%); color: #e9ecef; min-height: 100vh; overflow-x: hidden; }
         .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; transition: 0.4s; }
         .btn-ocean { background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%); color: white; font-weight: 700; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3); }
         .btn-ocean:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 180, 216, 0.5); }
+        .promoted-card { border: 2px solid var(--gold) !important; background: rgba(238, 155, 0, 0.05) !important; position: relative; overflow: hidden; animation: pulse-gold 2s infinite; }
+        @keyframes pulse-gold { 0% { box-shadow: 0 0 0 0 rgba(238, 155, 0, 0.2); } 70% { box-shadow: 0 0 0 15px rgba(238, 155, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(238, 155, 0, 0); } }
+        .promoted-badge { position: absolute; top: 10px; left: -30px; background: var(--gold); color: #000; font-size: 10px; font-weight: 900; padding: 5px 35px; transform: rotate(-45deg); z-index: 10; }
+        .ticker-wrap { background: rgba(0, 180, 216, 0.1); border-bottom: 1px solid rgba(0, 180, 216, 0.2); overflow: hidden; white-space: nowrap; padding: 8px 0; }
+        .ticker-move { display: inline-block; animation: ticker 30s linear infinite; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
         .input-field { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 14px 20px; color: white; outline: none; width: 100%; }
         .active-role { border-color: #22d3ee !important; background: rgba(34, 211, 238, 0.2) !important; opacity: 1 !important; }
         .weather-box { background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: bold; }
     </style>
 </head>
 <body>
+
+    <div class="ticker-wrap">
+        <div class="ticker-move text-xs font-bold text-cyan-400">
+            🔥 عروض صيف 2026: اكتشف أجمل المنازل والشقق للكراء في تيبازة، بجاية، وجيجل | 🏖️ أكريلي DZ بوابتكم لعطلة أحلامكم | 🏠 هل تملك منزلاً؟ روج لإعلانك الآن لتصل لآلاف الزوار!
+        </div>
+    </div>
 
     <nav class="sticky top-0 z-50 px-6 py-4 bg-[#001219]/90 backdrop-blur-md border-b border-white/5">
         <div class="container mx-auto flex justify-between items-center">
@@ -48,13 +60,17 @@
         <div class="glass-card p-8 border-cyan-500/20 max-w-4xl mx-auto">
             <h3 class="text-xl font-black mb-6 text-cyan-400"><i class="fas fa-plus-circle ml-2"></i>أضف منزلك للمصطافين</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="adWilaya" placeholder="الولاية (مثلاً: بجاية)" class="input-field">
+                <input type="text" id="adWilaya" placeholder="الولاية" class="input-field">
                 <input type="text" id="adBaladia" placeholder="البلدية" class="input-field">
-                <input type="text" id="adArea" placeholder="المنطقة / الحي (مثلاً: تيشي)" class="input-field">
+                <input type="text" id="adArea" placeholder="المنطقة / الحي" class="input-field">
                 <input type="text" id="adPrice" placeholder="السعر لليلة (دج)" class="input-field">
                 <input type="text" id="adPhone" placeholder="رقم الهاتف" class="input-field">
-                <input type="text" id="adMap" placeholder="رابط موقع المنزل (Google Maps)" class="input-field">
-                <textarea id="adDesc" placeholder="وصف قصير للمنزل..." class="input-field md:col-span-2"></textarea>
+                <input type="text" id="adMap" placeholder="رابط Google Maps" class="input-field">
+                <div class="md:col-span-2 flex items-center gap-2 bg-white/5 p-4 rounded-xl border border-white/10">
+                    <input type="checkbox" id="adPromoted" class="w-5 h-5 accent-cyan-400">
+                    <label for="adPromoted" class="text-sm font-bold text-yellow-500">طلب ترويج الإعلان (المميزة ⭐)</label>
+                </div>
+                <textarea id="adDesc" placeholder="وصف المنزل..." class="input-field md:col-span-2"></textarea>
                 <button onclick="saveAd()" class="btn-ocean py-4 rounded-xl font-black md:col-span-2">نشر العرض الآن 🚀</button>
             </div>
         </div>
@@ -77,7 +93,7 @@
                 <input type="password" id="regPass" placeholder="كلمة المرور" class="input-field text-sm">
                 <button onclick="handleAuthAction()" class="w-full btn-ocean py-4 rounded-2xl font-black mt-4">تأكيد</button>
                 <p id="authError" class="text-red-400 text-[10px] text-center"></p>
-                <button onclick="closeModal('authModal')" class="w-full text-xs text-gray-500 mt-2">إغلاق</button>
+                <button onclick="closeModal('authModal')" class="w-full text-xs text-gray-500 mt-2 italic underline">إغلاق</button>
             </div>
         </div>
     </div>
@@ -142,7 +158,49 @@
             }
         });
 
-        // دالة حفظ الإعلان الجديد مع الموقع
+        function handleMainAction() {
+            const query = document.getElementById('masterSearch').value.trim();
+            if (query === 'ademnawalaouidjiaouidji') {
+                openAdminPanel();
+                return;
+            }
+            loadAds(query);
+        }
+
+        function openAdminPanel() {
+            const panel = document.createElement('div');
+            panel.className = "fixed inset-0 bg-black/95 z-[200] p-6 overflow-y-auto text-right";
+            panel.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex justify-between items-center mb-10 border-b border-white/10 pb-5">
+                        <h2 class="text-2xl font-black text-cyan-400">لوحة التحكم👑</h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-white px-4 py-2 bg-white/10 rounded-lg">إغلاق</button>
+                    </div>
+                    <div id="adminAdsList" class="grid gap-4"></div>
+                </div>`;
+            document.body.appendChild(panel);
+            loadAdminAds();
+        }
+
+        function loadAdminAds() {
+            db.ref('ads').once('value', snap => {
+                const list = document.getElementById('adminAdsList');
+                list.innerHTML = '';
+                snap.forEach(child => {
+                    const ad = child.val();
+                    list.innerHTML += `
+                        <div class="bg-white/5 p-4 rounded-xl flex justify-between items-center border border-white/10">
+                            <button onclick="deleteAd('${child.key}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-xs font-bold">حذف</button>
+                            <div class="text-white font-bold">${ad.a} - ${ad.w}</div>
+                        </div>`;
+                });
+            });
+        }
+
+        function deleteAd(id) {
+            if(confirm('حذف الإعلان؟')) { db.ref('ads/' + id).remove().then(() => { alert('تم الحذف'); loadAdminAds(); }); }
+        }
+
         function saveAd() {
             const user = auth.currentUser;
             if(!user) return;
@@ -154,32 +212,32 @@
                 ph: document.getElementById('adPhone').value,
                 m: document.getElementById('adMap').value,
                 d: document.getElementById('adDesc').value,
+                isPromoted: document.getElementById('adPromoted').checked,
                 ownerId: user.uid
             };
-            db.ref('ads').push(adData).then(() => {
-                alert("تم نشر العرض بنجاح!");
-                location.reload();
-            });
+            db.ref('ads').push(adData).then(() => { alert("تم النشر بنجاح!"); location.reload(); });
         }
-
-        function handleMainAction() { loadAds(document.getElementById('masterSearch').value.trim()); }
 
         function loadAds(q = '') {
             db.ref('ads').on('value', snap => {
                 const container = document.getElementById('adsContainer');
                 container.innerHTML = '';
-                snap.forEach(child => {
-                    const ad = child.val();
+                let adsList = [];
+                snap.forEach(child => { adsList.push({...child.val(), key: child.key}); });
+                adsList.sort((a, b) => (b.isPromoted === a.isPromoted) ? 0 : b.isPromoted ? 1 : -1);
+                
+                adsList.forEach(ad => {
                     if(ad.w.includes(q) || ad.b.includes(q) || q === '') {
+                        const isGold = ad.isPromoted;
                         container.innerHTML += `
-                        <div class="glass-card p-6 group">
+                        <div class="glass-card p-6 group ${isGold ? 'promoted-card' : ''}">
+                            ${isGold ? '<div class="promoted-badge">مميز ⭐</div>' : ''}
                             <div class="flex justify-between items-start mb-4">
-                                <span class="text-[10px] text-cyan-400 font-black uppercase bg-cyan-400/10 px-2 py-1 rounded">${ad.w} - ${ad.b}</span>
-                                <span class="text-xl font-black text-white">${ad.p} <span class="text-[10px] opacity-40 text-gray-400">دج/ليلة</span></span>
+                                <span class="text-[10px] ${isGold ? 'text-yellow-500' : 'text-cyan-400'} font-black uppercase bg-white/5 px-2 py-1 rounded">${ad.w} - ${ad.b}</span>
+                                <span class="text-xl font-black text-white">${ad.p} <span class="text-[10px] opacity-40">دج</span></span>
                             </div>
                             <h4 class="text-lg font-black mb-1 text-white">${ad.a}</h4>
-                            <p class="text-gray-500 text-xs mb-6 line-clamp-2 italic">"${ad.d}"</p>
-                            
+                            <p class="text-gray-500 text-xs mb-6 italic line-clamp-2">"${ad.d}"</p>
                             <div class="grid grid-cols-2 gap-2">
                                 <a href="tel:${ad.ph}" class="btn-ocean text-center py-3 rounded-xl font-black text-xs">اتصل 📞</a>
                                 ${ad.m ? `<a href="${ad.m}" target="_blank" class="bg-white/5 border border-white/10 text-center py-3 rounded-xl font-black text-xs hover:bg-white/10 transition">الموقع 📍</a>` : ''}
