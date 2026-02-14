@@ -13,11 +13,7 @@
         .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; transition: 0.4s; }
         .btn-ocean { background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%); color: white; font-weight: 700; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3); }
         .btn-ocean:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 180, 216, 0.5); }
-        .input-field { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 14px 20px; color: white; outline: none; }
-        .reveal { animation: fadeIn 1s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* تصميم زر الرتبة النشط */
+        .input-field { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 14px 20px; color: white; outline: none; width: 100%; }
         .active-role { border-color: #22d3ee !important; background: rgba(34, 211, 238, 0.2) !important; opacity: 1 !important; }
         .weather-box { background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: bold; }
     </style>
@@ -40,47 +36,48 @@
         </div>
     </nav>
 
-    <header class="container mx-auto px-6 pt-16 pb-8 text-center reveal">
-        <h2 class="text-5xl md:text-6xl font-black mb-6 leading-tight">وجهتك المثالية <br><span class="text-cyan-400">لكراء منازل لعطلتك الصيفية</span></h2>
-        
-        <div class="max-w-3xl mx-auto mb-10 p-6 rounded-3xl bg-cyan-500/5 border border-cyan-500/10">
-            <p class="text-gray-300 leading-relaxed font-medium">
-                <i class="fas fa-umbrella-beach text-cyan-400 ml-2"></i>
-                أكريلي DZ هو الجسر السياحي الأول في الجزائر، يربط بين جمال الشواطئ وراحة المصطافين. منصتنا متخصصة في توفير أرقى الشقق والفيلات المخصصة للكراء الصيفي بلمسة واحدة.
-            </p>
-        </div>
-
+    <header class="container mx-auto px-6 pt-16 pb-8 text-center">
+        <h2 class="text-5xl md:text-6xl font-black mb-6 leading-tight">وجهتك المثالية <br><span class="text-cyan-400">لكراء منازل العطلات</span></h2>
         <div class="max-w-3xl mx-auto glass-card p-2 flex flex-col md:flex-row gap-2">
-            <input type="text" id="masterSearch" placeholder="أين تريد قضاء عطلتك؟ (ولاية، بلدية..)" class="bg-transparent flex-1 px-6 py-4 outline-none font-bold text-white">
+            <input type="text" id="masterSearch" placeholder="ابحث عن ولاية أو بلدية..." class="bg-transparent flex-1 px-6 py-4 outline-none font-bold text-white">
             <button onclick="handleMainAction()" class="btn-ocean px-10 py-4 rounded-2xl font-black">ابحث الآن</button>
         </div>
     </header>
+
+    <section id="addAdSection" class="container mx-auto px-6 py-8 hidden">
+        <div class="glass-card p-8 border-cyan-500/20 max-w-4xl mx-auto">
+            <h3 class="text-xl font-black mb-6 text-cyan-400"><i class="fas fa-plus-circle ml-2"></i>أضف منزلك للمصطافين</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="adWilaya" placeholder="الولاية (مثلاً: بجاية)" class="input-field">
+                <input type="text" id="adBaladia" placeholder="البلدية" class="input-field">
+                <input type="text" id="adArea" placeholder="المنطقة / الحي (مثلاً: تيشي)" class="input-field">
+                <input type="text" id="adPrice" placeholder="السعر لليلة (دج)" class="input-field">
+                <input type="text" id="adPhone" placeholder="رقم الهاتف" class="input-field">
+                <input type="text" id="adMap" placeholder="رابط موقع المنزل (Google Maps)" class="input-field">
+                <textarea id="adDesc" placeholder="وصف قصير للمنزل..." class="input-field md:col-span-2"></textarea>
+                <button onclick="saveAd()" class="btn-ocean py-4 rounded-xl font-black md:col-span-2">نشر العرض الآن 🚀</button>
+            </div>
+        </div>
+    </section>
 
     <main class="container mx-auto px-6 py-12">
         <div id="adsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
     </main>
 
-    <footer class="container mx-auto px-6 py-12 border-t border-white/5 text-center">
-        <p class="text-sm text-gray-500 mb-2 font-bold">للتواصل مع المطور adem :</p>
-        <a href="mailto:aouidjiabem@gmail.com" class="text-cyan-400 font-bold hover:underline">aouidjiabem@gmail.com</a>
-    </footer>
-
     <div id="authModal" class="fixed inset-0 bg-[#001219]/98 hidden z-[100] flex items-center justify-center p-6 backdrop-blur-xl">
-        <div class="glass-card max-w-md w-full p-10 reveal border-cyan-500/20">
+        <div class="glass-card max-w-md w-full p-10 border-cyan-500/20">
             <h3 id="authTitle" class="text-2xl font-black mb-6 text-center text-cyan-400">إنشاء حساب</h3>
             <div class="space-y-4">
-                <div id="nameBox"><input type="text" id="regName" placeholder="الاسم الكامل" class="input-field w-full font-bold text-sm"></div>
-                
+                <div id="nameBox"><input type="text" id="regName" placeholder="الاسم الكامل" class="input-field text-sm"></div>
                 <div id="roleBox" class="grid grid-cols-2 gap-2">
                     <button type="button" onclick="setRole('user')" id="rUser" class="p-3 rounded-xl border-2 border-white/10 text-[10px] font-bold opacity-50 active-role">حساب مصطاف</button>
                     <button type="button" onclick="setRole('owner')" id="rOwner" class="p-3 rounded-xl border-2 border-white/10 text-[10px] font-bold opacity-50">حساب مؤجر</button>
                 </div>
-
-                <input type="email" id="regEmail" placeholder="البريد الإلكتروني" class="input-field w-full font-bold text-sm">
-                <input type="password" id="regPass" placeholder="كلمة المرور" class="input-field w-full font-bold text-sm">
-                <button onclick="handleAuthAction()" class="w-full btn-ocean py-4 rounded-2xl font-black mt-4 shadow-lg shadow-cyan-500/20">تأكيد </button>
-                <p id="authError" class="text-red-400 text-[10px] text-center font-bold"></p>
-                <button onclick="closeModal('authModal')" class="w-full text-xs text-gray-500 mt-2 font-bold">إغلاق</button>
+                <input type="email" id="regEmail" placeholder="البريد الإلكتروني" class="input-field text-sm">
+                <input type="password" id="regPass" placeholder="كلمة المرور" class="input-field text-sm">
+                <button onclick="handleAuthAction()" class="w-full btn-ocean py-4 rounded-2xl font-black mt-4">تأكيد</button>
+                <p id="authError" class="text-red-400 text-[10px] text-center"></p>
+                <button onclick="closeModal('authModal')" class="w-full text-xs text-gray-500 mt-2">إغلاق</button>
             </div>
         </div>
     </div>
@@ -102,7 +99,6 @@
         let currentRole = 'user';
         let modalMode = 'signup';
 
-        // دالة تحديد الرتبة (مؤجر/مصطاف) المصلحة
         function setRole(r) {
             currentRole = r;
             document.getElementById('rUser').classList.toggle('active-role', r === 'user');
@@ -113,7 +109,7 @@
             modalMode = mode;
             document.getElementById(id).classList.remove('hidden');
             if(id === 'authModal') {
-                document.getElementById('authTitle').innerText = mode === 'signup' ? 'إنشاء حساب جديد' : 'مرحباً بك مجدداً';
+                document.getElementById('authTitle').innerText = mode === 'signup' ? 'إنشاء حساب' : 'دخول';
                 document.getElementById('nameBox').style.display = mode === 'signup' ? 'block' : 'none';
                 document.getElementById('roleBox').style.display = mode === 'signup' ? 'grid' : 'none';
             }
@@ -124,38 +120,49 @@
             const e = document.getElementById('regEmail').value.trim();
             const p = document.getElementById('regPass').value;
             const n = document.getElementById('regName').value.trim();
-            const errDisplay = document.getElementById('authError');
-            
             try {
                 if(modalMode === 'signup') {
-                    if(!n) { errDisplay.innerText = "يرجى كتابة الاسم الكامل"; return; }
                     const res = await auth.createUserWithEmailAndPassword(e, p);
                     await db.ref('users/' + res.user.uid).set({ displayName: n, role: currentRole });
-                } else { 
-                    await auth.signInWithEmailAndPassword(e, p); 
-                }
+                } else { await auth.signInWithEmailAndPassword(e, p); }
                 location.reload();
-            } catch (err) { errDisplay.innerText = err.message; }
+            } catch (err) { document.getElementById('authError').innerText = err.message; }
         }
 
         auth.onAuthStateChanged(user => {
             if(user) {
                 db.ref('users/' + user.uid).once('value', s => {
                     const d = s.val();
+                    if(d?.role === 'owner') document.getElementById('addAdSection').classList.remove('hidden');
                     document.getElementById('navActions').innerHTML = `
-                        <div class="flex items-center gap-3">
-                            <span class="text-xs font-black text-cyan-400">أهلاً، ${d?.displayName || 'مصطاف'} 🏖️</span>
-                            <button onclick="auth.signOut().then(()=>location.reload())" class="text-red-500 text-[10px] font-bold italic underline">خروج</button>
-                        </div>
+                        <span class="text-xs font-black text-cyan-400">أهلاً، ${d?.displayName || 'مصطاف'} 🏖️</span>
+                        <button onclick="auth.signOut().then(()=>location.reload())" class="text-red-500 text-[10px] font-bold">خروج</button>
                     `;
                 });
             }
         });
 
-        function handleMainAction() {
-            const q = document.getElementById('masterSearch').value.trim();
-            loadAds(q);
+        // دالة حفظ الإعلان الجديد مع الموقع
+        function saveAd() {
+            const user = auth.currentUser;
+            if(!user) return;
+            const adData = {
+                w: document.getElementById('adWilaya').value,
+                b: document.getElementById('adBaladia').value,
+                a: document.getElementById('adArea').value,
+                p: document.getElementById('adPrice').value,
+                ph: document.getElementById('adPhone').value,
+                m: document.getElementById('adMap').value,
+                d: document.getElementById('adDesc').value,
+                ownerId: user.uid
+            };
+            db.ref('ads').push(adData).then(() => {
+                alert("تم نشر العرض بنجاح!");
+                location.reload();
+            });
         }
+
+        function handleMainAction() { loadAds(document.getElementById('masterSearch').value.trim()); }
 
         function loadAds(q = '') {
             db.ref('ads').on('value', snap => {
@@ -163,16 +170,20 @@
                 container.innerHTML = '';
                 snap.forEach(child => {
                     const ad = child.val();
-                    if(ad.w.includes(q) || ad.m.includes(q) || q === '') {
+                    if(ad.w.includes(q) || ad.b.includes(q) || q === '') {
                         container.innerHTML += `
-                        <div class="glass-card p-8 group hover:border-cyan-400/50 transition-all">
+                        <div class="glass-card p-6 group">
                             <div class="flex justify-between items-start mb-4">
-                                <span class="text-[10px] text-cyan-400 font-black uppercase tracking-widest bg-cyan-400/10 px-2 py-1 rounded">${ad.w}</span>
-                                <span class="text-xl font-black text-white">${ad.p} <span class="text-[10px] opacity-40">دج</span></span>
+                                <span class="text-[10px] text-cyan-400 font-black uppercase bg-cyan-400/10 px-2 py-1 rounded">${ad.w} - ${ad.b}</span>
+                                <span class="text-xl font-black text-white">${ad.p} <span class="text-[10px] opacity-40 text-gray-400">دج/ليلة</span></span>
                             </div>
-                            <h4 class="text-xl font-black mb-3 group-hover:text-cyan-400 transition">${ad.m}</h4>
+                            <h4 class="text-lg font-black mb-1 text-white">${ad.a}</h4>
                             <p class="text-gray-500 text-xs mb-6 line-clamp-2 italic">"${ad.d}"</p>
-                            <a href="tel:${ad.ph}" class="block btn-ocean text-center py-3 rounded-xl font-black text-xs">احجز الآن 📞</a>
+                            
+                            <div class="grid grid-cols-2 gap-2">
+                                <a href="tel:${ad.ph}" class="btn-ocean text-center py-3 rounded-xl font-black text-xs">اتصل 📞</a>
+                                ${ad.m ? `<a href="${ad.m}" target="_blank" class="bg-white/5 border border-white/10 text-center py-3 rounded-xl font-black text-xs hover:bg-white/10 transition">الموقع 📍</a>` : ''}
+                            </div>
                         </div>`;
                     }
                 });
