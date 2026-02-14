@@ -16,13 +16,23 @@
         .input-field { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 14px 20px; color: white; outline: none; }
         .reveal { animation: fadeIn 1s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* تصميم زر الرتبة النشط */
+        .active-role { border-color: #22d3ee !important; background: rgba(34, 211, 238, 0.2) !important; opacity: 1 !important; }
+        .weather-box { background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <nav class="sticky top-0 z-50 px-6 py-4 bg-[#001219]/90 backdrop-blur-md border-b border-white/5">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-black italic text-white cursor-pointer" onclick="location.reload()">أكريلي<span class="text-cyan-400 font-normal">DZ</span></h1>
+            <div class="flex items-center gap-4">
+                <h1 class="text-3xl font-black italic text-white cursor-pointer" onclick="location.reload()">أكريلي<span class="text-cyan-400 font-normal">DZ</span></h1>
+                <div class="weather-box hidden md:flex">
+                    <i class="fas fa-sun text-yellow-400"></i>
+                    <span>الجزائر، 26°C</span>
+                </div>
+            </div>
             <div id="navActions" class="flex items-center gap-4">
                 <button onclick="openModal('authModal', 'login')" class="text-xs font-bold text-gray-400">دخول</button>
                 <button onclick="openModal('authModal', 'signup')" class="btn-ocean px-5 py-2 rounded-full text-[10px]">إنشاء حساب </button>
@@ -41,7 +51,7 @@
         </div>
 
         <div class="max-w-3xl mx-auto glass-card p-2 flex flex-col md:flex-row gap-2">
-            <input type="text" id="masterSearch" placeholder="أين تريد قضاء عطلتك؟ (ولاية، بلدية..)" class="bg-transparent flex-1 px-6 py-4 outline-none font-bold">
+            <input type="text" id="masterSearch" placeholder="أين تريد قضاء عطلتك؟ (ولاية، بلدية..)" class="bg-transparent flex-1 px-6 py-4 outline-none font-bold text-white">
             <button onclick="handleMainAction()" class="btn-ocean px-10 py-4 rounded-2xl font-black">ابحث الآن</button>
         </div>
     </header>
@@ -51,8 +61,8 @@
     </main>
 
     <footer class="container mx-auto px-6 py-12 border-t border-white/5 text-center">
-        <p class="text-sm text-gray-500 mb-2">للتواصل مع المطور adem :</p>
-        <a href="mailto:aouidjiabem@gmail.com" class="text-cyan-400 font-bold">aouidjiabem@gmail.com</a>
+        <p class="text-sm text-gray-500 mb-2 font-bold">للتواصل مع المطور adem :</p>
+        <a href="mailto:aouidjiabem@gmail.com" class="text-cyan-400 font-bold hover:underline">aouidjiabem@gmail.com</a>
     </footer>
 
     <div id="authModal" class="fixed inset-0 bg-[#001219]/98 hidden z-[100] flex items-center justify-center p-6 backdrop-blur-xl">
@@ -60,15 +70,17 @@
             <h3 id="authTitle" class="text-2xl font-black mb-6 text-center text-cyan-400">إنشاء حساب</h3>
             <div class="space-y-4">
                 <div id="nameBox"><input type="text" id="regName" placeholder="الاسم الكامل" class="input-field w-full font-bold text-sm"></div>
+                
                 <div id="roleBox" class="grid grid-cols-2 gap-2">
-                    <button onclick="setRole('user')" id="rUser" class="p-3 rounded-xl border-2 border-cyan-500 bg-cyan-500/10 text-[10px] font-bold">حساب مصطاف</button>
-                    <button onclick="setRole('owner')" id="rOwner" class="p-3 rounded-xl border-2 border-white/5 text-[10px] font-bold opacity-50">حساب مؤجر</button>
+                    <button type="button" onclick="setRole('user')" id="rUser" class="p-3 rounded-xl border-2 border-white/10 text-[10px] font-bold opacity-50 active-role">حساب مصطاف</button>
+                    <button type="button" onclick="setRole('owner')" id="rOwner" class="p-3 rounded-xl border-2 border-white/10 text-[10px] font-bold opacity-50">حساب مؤجر</button>
                 </div>
+
                 <input type="email" id="regEmail" placeholder="البريد الإلكتروني" class="input-field w-full font-bold text-sm">
                 <input type="password" id="regPass" placeholder="كلمة المرور" class="input-field w-full font-bold text-sm">
-                <button onclick="handleAuthAction()" class="w-full btn-ocean py-4 rounded-2xl font-black mt-4">تأكيد </button>
-                <p id="authError" class="text-red-400 text-[10px] text-center"></p>
-                <button onclick="closeModal('authModal')" class="w-full text-xs text-gray-500 mt-2">إغلاق</button>
+                <button onclick="handleAuthAction()" class="w-full btn-ocean py-4 rounded-2xl font-black mt-4 shadow-lg shadow-cyan-500/20">تأكيد </button>
+                <p id="authError" class="text-red-400 text-[10px] text-center font-bold"></p>
+                <button onclick="closeModal('authModal')" class="w-full text-xs text-gray-500 mt-2 font-bold">إغلاق</button>
             </div>
         </div>
     </div>
@@ -90,6 +102,13 @@
         let currentRole = 'user';
         let modalMode = 'signup';
 
+        // دالة تحديد الرتبة (مؤجر/مصطاف) المصلحة
+        function setRole(r) {
+            currentRole = r;
+            document.getElementById('rUser').classList.toggle('active-role', r === 'user');
+            document.getElementById('rOwner').classList.toggle('active-role', r === 'owner');
+        }
+
         function openModal(id, mode) {
             modalMode = mode;
             document.getElementById(id).classList.remove('hidden');
@@ -100,19 +119,23 @@
             }
         }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function setRole(r) { currentRole = r; }
 
         async function handleAuthAction() {
             const e = document.getElementById('regEmail').value.trim();
             const p = document.getElementById('regPass').value;
             const n = document.getElementById('regName').value.trim();
+            const errDisplay = document.getElementById('authError');
+            
             try {
                 if(modalMode === 'signup') {
+                    if(!n) { errDisplay.innerText = "يرجى كتابة الاسم الكامل"; return; }
                     const res = await auth.createUserWithEmailAndPassword(e, p);
                     await db.ref('users/' + res.user.uid).set({ displayName: n, role: currentRole });
-                } else { await auth.signInWithEmailAndPassword(e, p); }
+                } else { 
+                    await auth.signInWithEmailAndPassword(e, p); 
+                }
                 location.reload();
-            } catch (err) { document.getElementById('authError').innerText = err.message; }
+            } catch (err) { errDisplay.innerText = err.message; }
         }
 
         auth.onAuthStateChanged(user => {
@@ -120,8 +143,10 @@
                 db.ref('users/' + user.uid).once('value', s => {
                     const d = s.val();
                     document.getElementById('navActions').innerHTML = `
-                        <span class="text-xs font-black text-cyan-400">أهلاً، ${d?.displayName || 'مصطاف'} 🏖️</span>
-                        <button onclick="auth.signOut().then(()=>location.reload())" class="text-red-500 text-[10px] font-bold italic">خروج</button>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-black text-cyan-400">أهلاً، ${d?.displayName || 'مصطاف'} 🏖️</span>
+                            <button onclick="auth.signOut().then(()=>location.reload())" class="text-red-500 text-[10px] font-bold italic underline">خروج</button>
+                        </div>
                     `;
                 });
             }
@@ -140,9 +165,9 @@
                     const ad = child.val();
                     if(ad.w.includes(q) || ad.m.includes(q) || q === '') {
                         container.innerHTML += `
-                        <div class="glass-card p-8 group">
+                        <div class="glass-card p-8 group hover:border-cyan-400/50 transition-all">
                             <div class="flex justify-between items-start mb-4">
-                                <span class="text-[10px] text-cyan-400 font-black uppercase tracking-widest">${ad.w}</span>
+                                <span class="text-[10px] text-cyan-400 font-black uppercase tracking-widest bg-cyan-400/10 px-2 py-1 rounded">${ad.w}</span>
                                 <span class="text-xl font-black text-white">${ad.p} <span class="text-[10px] opacity-40">دج</span></span>
                             </div>
                             <h4 class="text-xl font-black mb-3 group-hover:text-cyan-400 transition">${ad.m}</h4>
